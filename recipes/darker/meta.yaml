@@ -1,0 +1,52 @@
+{% set name = "darker" %}
+{% set version = "1.2.2" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  sha256: 3a840c2cedec7e4d13c26c450d94f31bd872375450a0c057b9276cc9c2dbad5c
+
+build:
+  noarch: python
+  number: 0
+  skip: true   # [py<36]
+  entry_points:
+    - darker = darker.__main__:main
+  script: {{ PYTHON }} -m pip install . -vv
+
+requirements:
+  host:
+    - pip
+    - python
+  run:
+    - black >=20.8b1
+    - dataclasses  # [py<37]
+    - python
+    - toml
+    - typing-extensions  # [py<38]
+
+test:
+  imports:
+    - darker
+    - darker.tests
+  commands:
+    - pip check
+    - darker --help
+  requires:
+    - pip
+
+about:
+  home: https://github.com/akaihola/darker
+  summary: Apply Black formatting only in regions changed since last commit
+  license: BSD-3-Clause
+  license_family: BSD
+  license_file: LICENSE.rst
+  doc_url: https://github.com/akaihola/darker/blob/master/README.rst
+  dev_url: https://github.com/akaihola/darker
+
+extra:
+  recipe-maintainers:
+    - akaihola
